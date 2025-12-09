@@ -1,0 +1,8 @@
+{"id":"DRUG:001","name":"Metformin","category":["biolink:SmallMolecule","biolink:ChemicalEntity"]}
+{"id":"DRUG:002","name":"Albuterol","category":["biolink:SmallMolecule","biolink:ChemicalEntity"]}
+{"id":"DRUG:003","name":"Aspirin","category":["biolink:SmallMolecule","biolink:ChemicalEntity"]}
+{"id":"DISEASE:001","name":"type 2 diabetes","category":["biolink:Disease"]}
+{"id":"DISEASE:002","name":"asthma","category":["biolink:Disease"]}
+{"id":"DISEASE:003","name":"headache","category":["biolink:Disease"]}
+{"id":"ANATOMY:001","name":"skin","category":["biolink:AnatomicalEntity"]}
+{"id":"ANATOMY:002","name":"lung","category":["biolink:AnatomicalEntity"]}

@@ -1,0 +1,4 @@
+{"subject":"DRUG:001","predicate":"biolink:treats","object":"DISEASE:001","id":"edge_001"}
+{"subject":"DRUG:002","predicate":"biolink:treats","object":"DISEASE:002","id":"edge_002"}
+{"subject":"DRUG:003","predicate":"biolink:treats","object":"DISEASE:003","id":"edge_003"}
+{"subject":"DRUG:001","predicate":"biolink:affects","object":"DISEASE:002","id":"edge_004"}
