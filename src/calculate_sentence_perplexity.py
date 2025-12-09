@@ -86,71 +86,38 @@ def main():
 
     args = parser.parse_args()
 
-    print("=" * 80)
-    print("NORMALIZED PERPLEXITY CALCULATOR")
-    print("=" * 80)
-    print(f"Model: {args.model}")
-    print(f"Device: {args.device}")
-    print(f"Entity 1: {args.entity1}")
-    print(f"Entity 2: {args.entity2}")
-    print(f"Sentence: {args.sentence}")
-    print("=" * 80)
-
     # Load model
-    print("\nLoading model...")
-    model = AutoModelForCausalLM.from_pretrained(args.model, torch_dtype=torch.float32)
+    model = AutoModelForCausalLM.from_pretrained(args.model)
     model = model.to(args.device)
+    if args.device == "mps":
+        # Convert to float32 for MPS compatibility
+        model = model.to(dtype=torch.float32)
     model.eval()
 
     tokenizer = AutoTokenizer.from_pretrained(args.model)
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
 
-    print("Model loaded.\n")
-
     # Calculate entity perplexities
-    print("Calculating entity perplexities...")
     entity1_perp = calculate_entity_perplexity(args.entity1, model, tokenizer, args.device)
     entity2_perp = calculate_entity_perplexity(args.entity2, model, tokenizer, args.device)
 
     # Calculate sentence perplexity
-    print("Calculating sentence perplexity...")
     sentence_perp, sentence_loss = calculate_perplexity(
         args.sentence, model, tokenizer, args.device
     )
-
-    # Display results
-    print("\n" + "=" * 80)
-    print("RESULTS")
-    print("=" * 80)
-
-    print(f"\nEntity 1: {args.entity1}")
-    print(f"  Perplexity:  {entity1_perp:>12,.2f}")
-
-    print(f"\nEntity 2: {args.entity2}")
-    print(f"  Perplexity:  {entity2_perp:>12,.2f}")
-
-    print(f"\nSentence: \"{args.sentence}\"")
-    print(f"  Perplexity: {sentence_perp:>12,.2f}")
-    print(f"  Loss:       {sentence_loss:>12.4f}")
-
-    print("\n" + "-" * 80)
-    print("NORMALIZED PERPLEXITY (Sentence / Entity Product)")
-    print("-" * 80)
 
     # Calculate product and normalized perplexity
     entity_product = entity1_perp * entity2_perp
     normalized = sentence_perp / entity_product
 
-    print(f"\nEntity product:       {entity_product:>15,.2f}")
-    print(f"Normalized:           {normalized:>15.9f}")
-
-    print("\n" + "=" * 80)
-    print("Interpretation:")
-    print("  - Lower normalized value = sentence is less surprising given entity familiarity")
-    print("  - Higher normalized value = sentence is more surprising given entity familiarity")
-    print("  - Typical values range from ~0.00001 to ~0.00002 for biomedical sentences")
-    print("=" * 80)
+    # Display results
+    print(f"\nSentence: \"{args.sentence}\"")
+    print(f"  Entity 1 ({args.entity1}):     {entity1_perp:>12,.2f}")
+    print(f"  Entity 2 ({args.entity2}):     {entity2_perp:>12,.2f}")
+    print(f"  Entity product:                {entity_product:>15,.2f}")
+    print(f"  Sentence perplexity:           {sentence_perp:>12,.2f}")
+    print(f"  Normalized (sent/product):     {normalized:>15.9f}")
 
 
 if __name__ == "__main__":
